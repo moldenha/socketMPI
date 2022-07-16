@@ -98,7 +98,7 @@ void server::sendMsg(std::string input){
 	}
 }
 
-void sendMsg_spec(std::string input, int sock){
+void server::sendMsg_spec(std::string input, int sock){
 	write(sock, input.c_str(), input.size());
 }
 
@@ -106,19 +106,21 @@ void server::handleClient(int new_socket){
 	if(to_send.size() > 0){
 		for(int i = 0; i < to_send.size(); i++){
 			const char* next_msg = to_send.at(i).c_str();
+			std::cout<<"sending "<<next_msg<<std::endl;
 			write(new_socket, next_msg, strlen(next_msg));
 			sleep(2);
 		}
 		to_send.clear();
 	}
-	char sock_buf[1024];
 	while(true){
+		char sock_buf[1024];
 		int sock_readden = read(new_socket, sock_buf, sizeof(sock_buf));
 		if (sock_readden == 0)
 			break;
 		if (sock_readden > 0){
 			std::cout<<"got message: "<<sock_buf<<std::endl;
 			handleInput(std::string(sock_buf));
+			bzero(sock_buf, sizeof(sock_buf));
 		}
 	}
 	std::cout<<"connection closed"<<std::endl;

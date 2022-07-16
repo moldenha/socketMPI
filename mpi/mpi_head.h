@@ -30,8 +30,11 @@ class mpi_head{
 			}
 		~mpi_head(){delete serv;}
 		void handle_input(std::string input);
-		void send(std::string message, std::string name){this->send(message, connections.at(name));}
-		void send(std::string message, int connection){serv->sendMsg_spec(message, connection);}
+		void sendS(std::string message, std::string name){
+			try{this->sendI(message, connections.at(name));}
+			catch(...){std::cout<<"had to send to all"<<std::endl;send_all(message);}
+		}
+		void sendI(std::string message, int connection){serv->sendMsg_spec(message, connection);}
 		void send_all(std::string message){serv->sendMsg(message);}
 		void set_handleInput(std::function<void(std::string)> func){handleInput = func;}
 };

@@ -25,6 +25,7 @@ class testSends:
 #include <functional>
 #include <vector>
 #include <arpa/inet.h>
+#include <cassert>
 
 class client{
 	int sockfd, connfd;	
@@ -84,8 +85,9 @@ void client::wait_for_input(){
 			std::cout<<"server disconnected"<<std::endl;
 			break;
 		}
-		std::string input(buf);
+		std::string input(buf, output);
 		handleInput(input);
+		bzero(buf, sizeof(buf));
 	}
 }
 void client::run(){
